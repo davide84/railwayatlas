@@ -28,19 +28,119 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 L.control.scale().addTo(map);
 
 var stations = {
+    "A Coruña": [43.352683, -8.409711],
+    "Albacete": [38.9997, -1.84769],
+    "Alicante": [38.344444, -0.494972],
+    "Almería": [36.83466, -2.456159],
+    "Antequera S. Ana": [37.0702, -4.7192],
+    "Barcelona Sants": [41.378889, 2.14],
+    "Bilbao": [43.260511, -2.927653],
+    "Burgos": [42.371205, -3.666351],
+    "Cádiz": [36.528889, -6.288056],
+    "Camp de Tarragona": [41.192181, 1.274064],
+    "Castellón": [39.988333, -0.0525],
     "Cordoba": [37.8884, -4.78948],
-    "Sevilla": [37.392239, -5.974889]
+    "Figueres": [42.265556, 2.942222],
+    "Granada": [37.1841, -3.6092],
+    "Huesca": [42.1333, -0.4095],
+    "Jerez de la Frontera": [36.68, -6.1267],
+    "La Sagra junction": [39.982903,-3.8403323],
+    "Leon": [42.5951, -5.58204],
+    "Lleida Pirineus": [41.620833, 0.632778],
+    "Madrid Atocha": [40.4075, -3.691667],
+    "Madrid Chamartin": [40.472222, -3.682222],
+    "Málaga": [36.7118, -4.4321],
+    "Marchena AVE": [37.339098, -5.4068302],
+    "Monforte del Cid junction": [38.4006266,-0.7203785],
+    "Motilla junction": [39.5972065,-1.9581414],
+    "Murcia": [37.9748, -1.1315],
+    "Olmedo junction": [41.279085, -4.6889718],
+    "Orihuela": [38.077778, -0.944444],
+    "Ourense": [42.332778, -7.860833],
+    "Pedralba junction": [42.038669, -6.6775184],
+    "Perpignan": [42.6965, 2.8799],
+    "San Sebastián": [43.317738, -1.976744],
+    "Santiago de Compostela": [42.8702, -8.54595],
+    "Segovia": [40.910139, -4.094861],
+    "Sevilla": [37.392239, -5.974889],
+    "Toledo": [39.8624, -4.01125],
+    "Torrejon de Velasco junction": [40.17908, -3.7470741],
+    "Valencia": [39.4583028,-0.3803766],
+    "Valladolid": [41.642042, -4.726935],
+    "Venta de Banos": [41.917222, -4.496111],
+    "Vergara junction": [43.112746,-2.5536244],
+    "Vigo-Urzáiz": [42.234257, -8.713612],
+    "Vitoria": [42.841247, -2.672844],
+    "Zamora": [41.516111, -5.739167],
+    "Zaragoza": [41.658611, -0.911111],
 }
 
 var lines = [
-    ["Cordoba", "Sevilla"]
+    // Madrid
+    ["Madrid Chamartin", "Madrid Atocha", "orange"],
+    // Atlantic Corridor
+    ["A Coruña", "Santiago de Compostela", "green"],
+    ["Santiago de Compostela", "Vigo-Urzáiz", "green"],
+    ["Santiago de Compostela", "Ourense", "green"],
+    ["Ourense", "Pedralba junction", "orange"],
+    ["Pedralba junction", "Zamora", "green"],
+    ["Zamora", "Olmedo junction", "green"],
+    // Madrid–León
+    ["Leon", "Venta de Banos", "green"],
+    ["Venta de Banos", "Valladolid", "green"],
+    ["Valladolid", "Olmedo junction", "green"],
+    ["Olmedo junction", "Segovia", "green"],
+    ["Segovia", "Madrid Chamartin", "green"],
+    // Basque Y
+    ["Bilbao", "Vergara junction", "orange"],
+    ["Vergara junction", "Vitoria", "orange"],
+    ["Vitoria", "Burgos", "orange"],
+    ["Burgos", "Venta de Banos", "orange"],
+    ["Vergara junction", "San Sebastián", "orange"],
+    // Madrid - Barcelona - France
+    ["Madrid Atocha", "Zaragoza", "green"],
+    ["Zaragoza", "Lleida Pirineus", "green"],
+    ["Lleida Pirineus", "Camp de Tarragona", "green"],
+    ["Camp de Tarragona", "Barcelona Sants", "green"],
+    ["Barcelona Sants", "Figueres", "green"],
+    ["Figueres", "Perpignan", "green"],
+    ["Zaragoza", "Huesca", "green"],
+    // Madrid - Toledo
+    ["La Sagra junction", "Toledo", "green"],
+    // Madrid - Sevilla - Cádiz
+    ["Madrid Atocha", "Torrejon de Velasco junction", "orange"],
+    ["Torrejon de Velasco junction", "La Sagra junction", "green"],
+    ["La Sagra junction", "Cordoba", "green"],
+    ["Cordoba", "Sevilla", "green"],
+    ["Sevilla", "Jerez de la Frontera", "green"],
+    ["Jerez de la Frontera", "Cádiz", "green"],
+    // Cordoba - Málaga
+    ["Cordoba", "Antequera S. Ana", "green"],
+    ["Antequera S. Ana", "Málaga", "green"],
+    // Andalusian Transverse Axis
+    ["Sevilla", "Marchena AVE", "gray"],
+    ["Marchena AVE", "Antequera S. Ana", "red"],
+    ["Antequera S. Ana", "Granada", "green"],
+    // Madrid - Levante
+    ["Torrejon de Velasco junction", "Motilla junction", "green"],
+    ["Motilla junction", "Valencia", "green"],
+    ["Valencia", "Castellón", "green"],
+    ["Motilla junction", "Albacete", "green"],
+    ["Albacete", "Monforte del Cid junction", "green"],
+    ["Monforte del Cid junction", "Alicante", "green"],
+    ["Monforte del Cid junction", "Orihuela", "orange"],
+    ["Orihuela", "Murcia", "orange"],
+    // Murcia - Almería
+    ["Murcia", "Almería", "orange"],
+    // misc
 ]
 
 for (i=0; i<lines.length; i++) {
     line = lines[i];
+    console.debug("Plotting line " + line[0] + " - " + line[1] + "...");
     var point_a = new L.LatLng(stations[line[0]][0], stations[line[0]][1]);
     var point_b = new L.LatLng(stations[line[1]][0], stations[line[1]][1]);
-    polyline = new L.Polyline([point_a, point_b], { color: 'green' });
+    polyline = new L.Polyline([point_a, point_b], { color: line[2] });
     polyline.addTo(map);
 };
 
