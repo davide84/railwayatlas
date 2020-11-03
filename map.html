@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+</head>
+
+<body>
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+
+
+<div id="mapid" style="height: 600px;"></div>
+
+<script>
+
+var map = L.map('mapid').setView([40.398396, -3.681477], 6);
+// add the OpenStreetMap tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+}).addTo(map);
+// show the scale bar on the lower left corner
+L.control.scale().addTo(map);
+
+var stations = {
+    "Cordoba": [37.8884, -4.78948],
+    "Sevilla": [37.392239, -5.974889]
+}
+
+var lines = [
+    ["Cordoba", "Sevilla"]
+]
+
+for (i=0; i<lines.length; i++) {
+    line = lines[i];
+    var point_a = new L.LatLng(stations[line[0]][0], stations[line[0]][1]);
+    var point_b = new L.LatLng(stations[line[1]][0], stations[line[1]][1]);
+    polyline = new L.Polyline([point_a, point_b], { color: 'green' });
+    polyline.addTo(map);
+};
+
+/*
+var pointA = new L.LatLng(28.635308, 77.22496);
+var pointB = new L.LatLng(28.984461, 77.70641);
+var pointList = [pointA, pointB];
+
+var firstpolyline = new L.Polyline(pointList, {
+    color: 'red',
+    weight: 3,
+    opacity: 0.5,
+    smoothFactor: 1
+});
+firstpolyline.addTo(map);
+*/
+//L.marker({lon: 0, lat: 0}).bindPopup('The center of the world').addTo(map);
+
+
+
+</script>
+
+
+
+</body>
+</html>
