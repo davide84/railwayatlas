@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+</head>
+
+<body>
+ <link rel="stylesheet" href="leaflet/leaflet.css">
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="leaflet/leaflet.js"></script>
+
+
+<div id="mapid" style="height: 600px;"></div>
+
+<script>
+
+async function getVisibleStations(map) {
+    let bounds = map.getBounds();
+    let nelat = bounds._northEast.lat;
+    let nelng = bounds._northEast.lng;
+    let swlat = bounds._southWest.lat;
+    let swlng = bounds._southWest.lng;
+    // get the visible stations
+    let params = "nelat=" + nelat + "&nelng=" + nelng + "&swlat=" + swlat + "&swlng=" + swlng;
+    const response = await fetch('https://www.cester.net/railwayatlas/api/v1/stations/read.php?' + params);
+    const json = await response.json();
+    return json
+}
+
+async function updateMap(map) {
+    visible_stations = await getVisibleStations(map);
+    console.debug(visible_stations);
+    // TODO: get the visible stretches, depending on the visible stations
+}
+
+var map = L.map('mapid').setView([45.6723, 12.2422], 6);
+// add the OpenStreetMap tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+}).addTo(map);
+// show the scale bar on the lower left corner
+L.control.scale().addTo(map);
+
+// listeners
+map.on('zoomend', function(e){updateMap(map);});
+
+updateMap(map);
+
+/*
+for (i=0; i<lines.length; i++) {
+    line = lines[i];
+    console.debug("Plotting line " + line[0] + " - " + line[1] + "...");
+    var point_a = new L.LatLng(stations[line[0]][0], stations[line[0]][1]);
+    var point_b = new L.LatLng(stations[line[1]][0], stations[line[1]][1]);
+    polyline = new L.Polyline([point_a, point_b], { color: line[2] });
+    polyline.addTo(map);
+};
+*/
+
+
+
+</script>
+
+
+
+</body>
+</html>
