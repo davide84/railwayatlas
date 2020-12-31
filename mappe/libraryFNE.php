@@ -69,12 +69,12 @@ function writeLineDecl($tracks,$class,$visual,$visualType,$visualColor,$alpha) {
 }
 
 function setVisualParams($link) {
-	$result1 = mysql_query("SELECT id, internal_name FROM maps_visuals ORDER BY id",$link);
-	while ($row1 = mysql_fetch_array($result1)) {
+	$result1 = mysqli_query($link, "SELECT id, internal_name FROM maps_visuals ORDER BY id");
+	while ($row1 = mysqli_fetch_array($result1)) {
 		$id = $row1['id']; if ($id<10) { $id = "0".$id; }
 		$visual['color'][$id][0] = 'cccccc';
-		$result = mysql_query("SELECT id, color FROM maps_".$row1['internal_name']." ORDER BY id",$link);
-		while ($row = mysql_fetch_array($result)) {
+		$result = mysqli_query($link, "SELECT id, color FROM maps_".$row1['internal_name']." ORDER BY id");
+		while ($row = mysqli_fetch_array($result)) {
 			$visual['color'][$id][$row['id']] = "".$row['color'];
 			$visual['names'][$id][$row['id']] = "".$row['name'];
 		}
@@ -83,12 +83,11 @@ function setVisualParams($link) {
 }
 
 
-function getTracks($line,$country,$region,$visual,$class,$visualParams,$link) {
+function getTracks($line,$country,$visual,$class,$visualParams,$link) {
 	if ($line=='') {
 	// all lines on map
 		$query = "SELECT * FROM maps_tracks WHERE";
 		$query .= " country=1";
-		$query .= " AND (region=1 OR region=2)";
 		if ($class!=0) { $query .= " AND class=".$class; }
 		$query .= " ORDER BY class DESC;";
 		$result = mysql_query($query,$link);
@@ -111,7 +110,6 @@ function getTracks($line,$country,$region,$visual,$class,$visualParams,$link) {
 		// lines not selected: all in gray
 		$query = "SELECT * FROM maps_tracks WHERE"; // WHERE (class!=4 AND class!=3)";
 		$query .= " country=1";
-		$query .= " AND (region=1 OR region=2)";
                 if ($class!=0) { $query .= " AND class=".$class; }
 		foreach ($segmenti as &$id) { $query .= " AND (id!=".$id[0].")"; }
 		$query .= ";";
@@ -129,7 +127,6 @@ function getTracks($line,$country,$region,$visual,$class,$visualParams,$link) {
 		// lines selected: color requested
 		$query = "SELECT id,class,gabarit,power,tracks FROM maps_tracks WHERE";
                 $query .= " country=1";
-                $query .= " AND (region=1 OR region=2)";
                 if ($class!=0) { $query .= " AND class=".$class; }
  		$query .= " AND (1=2";
 		foreach ($segmenti as &$id) { $query .= " OR id=".$id[0]; }

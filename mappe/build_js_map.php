@@ -12,7 +12,6 @@
 	// codex
 	//$codex	= $_GET['q'];
 	$country	= '01'; //"".substr($codex, 0, 2);
-	$region		= '01'; //"".substr($codex, 2, 2);
 	$visual		= '02'; //"".substr($codex, 4, 2);
 	$izoom		= $_GET['izoom']; if ($izoom=='') { $izoom=10; }
 	$line           = $_GET['line'];
@@ -35,43 +34,37 @@
 				$c_lat = $coordinates['lat'];
 				$c_lon = $coordinates['lon'];
 			} else {
-				if ($region!='00') {
-					$coordinates = getCoordinates('region',$region,$conn);
-					$c_lat = $coordinates['lat'];
-					$c_lon = $coordinates['lon'];
-				} else {
-					$c_lat = 45.876;
-					$c_lon = 12.304;
-				}
+				$c_lat = 45.876;
+				$c_lon = 12.304;
 			}
 		}
 	}
 
 function getCoordinates($type,$id,$link) {
-	$query = "SELECT lat,lon FROM maps_".$type."s WHERE id=".$id.";"; 
-	$row = mysql_fetch_array(mysql_query($query,$link));
+	$query = "SELECT lat,lon FROM maps_".$type."s WHERE id=".$id.";";
+    $result = mysqli_query($link, $query);
+	$row = mysqli_fetch_array($result);
 	$ll['lat'] = $row['lat'];
 	$ll['lon'] = $row['lon'];
 	return $ll;
 }
 
-function getStations($line,$country,$region,$visual,$viewlevel,$link) {
+function getStations($line,$visual,$viewlevel,$link) {
 	if ($line=='') {
 		$query = "SELECT * FROM maps_objects WHERE (type=1 OR type=2) AND view=".$viewlevel;
-		$query .= " AND country=".$country;
-		$query .= " AND (region=1 OR region=2)";
 		//if ($visual!="04") { $query .= " AND value1!=0"; }
 		$query.= ";";
 	} else {
 		$query = "SELECT stations FROM maps_lines WHERE id=".$line.";";
-		$row = mysql_fetch_array(mysql_query($query,$link));
+		$row = mysqli_fetch_array(mysqli_query($link, $query));
 		preg_match_all("/\d+/", $row['stations'], $stazioni, PREG_SET_ORDER);
 		$query = "SELECT * FROM maps_objects WHERE (type=1 OR type=2) AND view=".$viewlevel." AND (1=2";
 		foreach ($stazioni as &$id) { $query .= " OR id=".$id[0]; }
 		$query .= ");";
 	}
-	$result = mysql_query($query,$link);
-	while ($row = mysql_fetch_array($result)) {
+	$result = mysqli_query($link, $query);
+    echo mysqli_error($link);
+	while ($row = mysqli_fetch_array($result)) {
 		echo "\tvar image = new google.maps.MarkerImage('icons/".setIcon($visual,$row['type'],$row['value1'],$row['value2']).".png', new google.maps.Size(17, 17), new google.maps.Point(0,0), new google.maps.Point(9, 9));\n";
 		echo "\tvar obj_ll = new google.maps.LatLng(".$row['lat'].",".$row['lon'].");\n";
 		echo "\tbatch.push(new google.maps.Marker({ position: obj_ll, icon: image,";
@@ -104,25 +97,25 @@ function getStations($line,$country,$region,$visual,$viewlevel,$link) {
 
 function getSmallStationMarkers() {
 	var batch = [];
-<?php getStations($line,$country,$region,$visual,4,$conn); ?>
+<?php getStations($line,$visual,4,$conn); ?>
 	return batch;
 }
 
 function getMediumStationMarkers() {
 	var batch = [];
-<?php getStations($line,$country,$region,$visual,3,$conn); ?>
+<?php getStations($line,$visual,3,$conn); ?>
 	return batch;
 }
 
 function getBigStationMarkers() {
 	var batch = [];
-<?php getStations($line,$country,$region,$visual,2,$conn); ?>
+<?php getStations($line,$visual,2,$conn); ?>
 	return batch;
 }
 
 function getHugeStationMarkers() {
 	var batch = [];
-<?php getStations($line,$country,$region,$visual,1,$conn); ?>
+<?php getStations($line,$visual,1,$conn); ?>
 	return batch;
 }
 
@@ -156,10 +149,10 @@ function initialize() {
 
 <?php
 	$visualParams = setVisualParams($conn);
-	getTracks($line,$country,$region,$visual,4,$visualParams,$conn); // dismesse/incompiute
-	getTracks($line,$country,$region,$visual,3,$visualParams,$conn); // raccordi industriali
-	getTracks($line,$country,$region,$visual,2,$visualParams,$conn); // rete complementare
-	getTracks($line,$country,$region,$visual,1,$visualParams,$conn); // rete fondamentale
+	//getTracks($line,$country,$visual,4,$visualParams,$conn); // dismesse/incompiute
+	//getTracks($line,$country,$visual,3,$visualParams,$conn); // raccordi industriali
+	//getTracks($line,$country,$visual,2,$visualParams,$conn); // rete complementare
+	//getTracks($line,$country,$visual,1,$visualParams,$conn); // rete fondamentale
 ?>
 
 	var listener = google.maps.event.addListener(map, 'bounds_changed', function(){

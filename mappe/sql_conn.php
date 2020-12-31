@@ -1,11 +1,11 @@
 <?php
-$conn = mysql_connect('62.149.150.109', 'Sql315398', '0b223a98');
+$conn = mysqli_connect('localhost', 'atlas', 'Showmethemaps!');
 if (!$conn) {
-    die('Could not connect: ' . mysql_error());
+    die('Could not connect: ' . mysqli_error());
 }
 // selezione database
-$my_db = "Sql315398_5";
-$database = mysql_select_db($my_db, $conn);
+$my_db = "railway_atlas";
+$database = mysqli_select_db($conn, $my_db);
 // selects correct character set
-mysql_unbuffered_query("SET NAMES utf8;",$conn);
+//mysqli_unbuffered_query($conn, "SET NAMES utf8;");
 ?>
