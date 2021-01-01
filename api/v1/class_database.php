@@ -38,16 +38,7 @@ class Database {
         $stmt->execute();
         $stations_arr=array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            // extract row: this will make $row['name'] to just $name only
-            extract($row);
-            $station = array(  
-                "id" => $id,
-                "name" => $name,
-                "type" => $type,
-                "lat" => $lat,
-                "lng" => $lng
-            );
-            array_push($stations_arr, $station);
+            array_push($stations_arr, $row);
         }
         return $stations_arr;
     }

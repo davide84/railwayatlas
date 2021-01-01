@@ -1,18 +1,10 @@
 <?php
-include '../class_database.php';
+include '../helpers_database.php';
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-$db = new Database();
-$db->connect();
-if (!$db->connect()) {
-    http_response_code(500);
-    echo json_encode(
-        array("message" => "Can't connect to database: " . $db->getLastErrorMessage())
-    );
-    die();
-}
+$db = db_connect_or_die_500();
 
 http_response_code(200);
 $nelat = null;
