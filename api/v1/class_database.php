@@ -28,12 +28,14 @@ class Database {
         return true;
     }
 
-    public function getStations($nelat, $nelng, $swlat, $swlng) {
-        $query = "SELECT * FROM maps_objects WHERE (type=1 OR type=2)";
+    public function getStations($nelat, $nelng, $swlat, $swlng, $zoom) {
+        $query = "SELECT * FROM maps_objects";
+        $query .= " WHERE (type=1 OR type=2) AND value2!=2";
         if (!is_null($nelat)) { $query .= " AND lat<".$nelat; }
         if (!is_null($nelng)) { $query .= " AND lng<".$nelng; }
         if (!is_null($swlat)) { $query .= " AND lat>".$swlat; }
         if (!is_null($swlng)) { $query .= " AND lng>".$swlng; }
+        if (!is_null($zoom)) { $query .= " AND min_zoom<=".$zoom; }
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $stations_arr=array();
@@ -41,6 +43,14 @@ class Database {
             array_push($stations_arr, $row);
         }
         return $stations_arr;
+    }
+
+    public function updateObject($id, $name) {
+        $query = "UPDATE maps_objects SET";
+        if (!is_null($name)) { $query .= " name='" . $name . "'"; }
+        $query .= " WHERE id=" . $id . ";";
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute();
     }
  
 } // end Database class
